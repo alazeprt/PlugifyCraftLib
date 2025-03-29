@@ -34,6 +34,24 @@ public class SpigotMCRepository implements PluginRepository {
         return list;
     }
 
+    public List<Plugin> fastGetPlugins(int size, int page) throws IOException {
+        List<Plugin> list = new ArrayList<>();
+        String data = HttpUtil.get("https://api.spiget.org/v2/resources", Map.of("Accept", "application/json"),
+                Map.of("size", String.valueOf(size), "page", String.valueOf(page)));
+        Gson gson = new Gson();
+        try {
+            JsonArray jsonArray = gson.fromJson(data, JsonArray.class);
+            for (JsonElement jsonElement : jsonArray) {
+                JsonObject jsonObject = jsonElement.getAsJsonObject();
+                Plugin plugin = SpigotPlugin.fastFromJson(this, jsonObject);
+                list.add(plugin);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
     @Override
     public Plugin getPlugin(int pluginId) throws IOException {
         return getSpigotPlugin(pluginId);

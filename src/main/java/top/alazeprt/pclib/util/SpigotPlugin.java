@@ -34,4 +34,18 @@ public class SpigotPlugin extends Plugin {
                 jsonObject.get("description") == null ? "" : new String(Base64.getDecoder().decode(jsonObject.get("description").getAsString())),
                 jsonObject.getAsJsonObject("icon").get("data").getAsString());
     }
+
+    public static SpigotPlugin fastFromJson(SpigotMCRepository repository, JsonObject jsonObject) throws IOException {
+        return new SpigotPlugin(repository,
+                jsonObject.get("id").getAsInt(),
+                jsonObject.get("name").getAsString(),
+                new Author(repository, jsonObject.getAsJsonObject("author").get("id").getAsInt(), String.valueOf(jsonObject.getAsJsonObject("author").get("id").getAsInt()), ""),
+                jsonObject.get("downloads").getAsInt(),
+                String.valueOf(jsonObject.getAsJsonObject("category").get("id").getAsInt()),
+                jsonObject.get("releaseDate").getAsLong(),
+                jsonObject.get("updateDate").getAsLong(),
+                jsonObject.getAsJsonObject("rating").get("average").getAsInt(),
+                jsonObject.get("description") == null ? "" : new String(Base64.getDecoder().decode(jsonObject.get("description").getAsString())),
+                jsonObject.getAsJsonObject("icon").get("data").getAsString());
+    }
 }
