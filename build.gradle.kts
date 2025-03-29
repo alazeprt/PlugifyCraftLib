@@ -4,7 +4,7 @@ plugins {
 }
 
 group = "top.alazeprt.pclib"
-version = "1.1"
+version = "1.2"
 
 repositories {
     mavenCentral()
@@ -15,7 +15,6 @@ dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter")
     implementation("com.google.code.gson:gson:2.12.1")
     implementation("org.apache.httpcomponents.client5:httpclient5:5.4.3")
-    implementation(kotlin("stdlib-jdk8"))
 }
 
 tasks.test {
