@@ -1,6 +1,7 @@
 package top.alazeprt.pclib.util;
 
 import org.apache.hc.client5.http.classic.methods.HttpGet;
+import org.apache.hc.client5.http.config.RequestConfig;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
 import org.apache.hc.client5.http.impl.classic.HttpClients;
 import org.apache.hc.core5.http.HttpEntity;
@@ -12,12 +13,15 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 public class HttpUtil {
-    public static String getImageEncoded(String url) throws IOException {
-        try (CloseableHttpClient client = HttpClients.createDefault()) {
-            HttpGet httpGet = new HttpGet(url);
 
+    private static final RequestConfig rc = RequestConfig.custom().setConnectionRequestTimeout(3000L, TimeUnit.MILLISECONDS).setResponseTimeout(10000L, TimeUnit.MILLISECONDS).build();
+
+    public static String getImageEncoded(String url) throws IOException {
+        try (CloseableHttpClient client = HttpClients.custom().setDefaultRequestConfig(rc).build()) {
+            HttpGet httpGet = new HttpGet(url);
             return client.execute(httpGet, response -> {
                 int statusCode = response.getCode();
                 HttpEntity entity = response.getEntity();
@@ -38,8 +42,7 @@ public class HttpUtil {
 
     public static String get(String url, Map<String, String> headers, Map<String, String> queryParams) throws IOException {
         String fullUrl = buildUrlWithQueryParams(url, queryParams);
-
-        try (CloseableHttpClient client = HttpClients.createDefault()) {
+        try (CloseableHttpClient client = HttpClients.custom().setDefaultRequestConfig(rc).build()) {
             HttpGet httpGet = new HttpGet(fullUrl);
 
             // 添加请求头

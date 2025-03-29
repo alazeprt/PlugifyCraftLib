@@ -11,7 +11,7 @@ public class SpigotMCRepositoryTest {
     @Test
     public void getPlugins() throws IOException {
         SpigotMCRepository repository = new SpigotMCRepository();
-        List<Plugin> plugins = repository.getPlugins(20, 114);
+        List<Plugin> plugins = repository.fastGetPlugins(20, 114);
         for (Plugin plugin : plugins) {
             System.out.println(plugin.name);
         }
