@@ -6,14 +6,15 @@ import top.alazeprt.pclib.util.SpigotPlugin;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Random;
 
 public class SpigotMCRepositoryTest {
     @Test
     public void getPlugins() throws IOException {
         SpigotMCRepository repository = new SpigotMCRepository();
-        List<Plugin> plugins = repository.fastGetPlugins(20, 114);
+        List<Plugin> plugins = repository.fastGetPlugins(20, Math.abs(new Random().nextInt()%200)+1);
         for (Plugin plugin : plugins) {
-            System.out.println(plugin.name);
+            System.out.println(plugin.updateDate);
         }
     }
 

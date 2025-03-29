@@ -17,7 +17,7 @@ public class SpigotPlugin extends Plugin {
     }
 
     public SpigotPlugin(PluginRepository repository, int id, String name, Author author, int downloads, String category, long releaseDate, long updateDate, int rating, String description, String image) {
-        super(repository, id, name, author, downloads, category, new Date(releaseDate), new Date(updateDate), description, image);
+        super(repository, id, name, author, downloads, category, new Date(releaseDate * 1000L), new Date(updateDate * 1000L), description, image);
         this.rating = rating;
     }
 
