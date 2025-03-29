@@ -57,6 +57,41 @@ public class SpigotMCRepository implements PluginRepository {
         return getSpigotPlugin(pluginId);
     }
 
+    @Override
+    public List<Plugin> search(String keyword, int size) throws IOException {
+        List<Plugin> list = new ArrayList<>();
+        String data = HttpUtil.get("https://api.spiget.org/v2/search/resources/" + keyword, Map.of("Accept", "application/json"), Map.of("size", String.valueOf(size)));
+        Gson gson = new Gson();
+        try {
+            JsonArray jsonArray = gson.fromJson(data, JsonArray.class);
+            for (JsonElement jsonElement : jsonArray) {
+                JsonObject jsonObject = jsonElement.getAsJsonObject();
+                Plugin plugin = SpigotPlugin.fromJson(this, jsonObject);
+                list.add(plugin);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+    public List<Plugin> fastSearch(String keyword, int size) throws IOException {
+        List<Plugin> list = new ArrayList<>();
+        String data = HttpUtil.get("https://api.spiget.org/v2/search/resources/" + keyword, Map.of("Accept", "application/json"), Map.of("size", String.valueOf(size)));
+        Gson gson = new Gson();
+        try {
+            JsonArray jsonArray = gson.fromJson(data, JsonArray.class);
+            for (JsonElement jsonElement : jsonArray) {
+                JsonObject jsonObject = jsonElement.getAsJsonObject();
+                Plugin plugin = SpigotPlugin.fastFromJson(this, jsonObject);
+                list.add(plugin);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
     public Author getAuthor(int authorId) throws IOException {
         String data = HttpUtil.get("https://api.spiget.org/v2/authors/" + authorId, Map.of("Accept", "application/json"), Map.of());
         Gson gson = new Gson();

@@ -24,4 +24,13 @@ public class SpigotMCRepositoryTest {
         SpigotPlugin plugin = repository.getSpigotPlugin(83767);
         System.out.println(plugin.author.name);
     }
+
+    @Test
+    public void search() throws IOException {
+        SpigotMCRepository repository = new SpigotMCRepository();
+        List<Plugin> plugins = repository.fastSearch("Husk", 20);
+        for (Plugin plugin : plugins) {
+            System.out.println(plugin.name);
+        }
+    }
 }

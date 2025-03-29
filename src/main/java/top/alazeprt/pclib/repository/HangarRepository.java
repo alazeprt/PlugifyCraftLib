@@ -41,6 +41,25 @@ public class HangarRepository implements PluginRepository {
         return getHangarPlugin(pluginId);
     }
 
+    @Override
+    public List<Plugin> search(String keyword, int size) throws IOException {
+        List<Plugin> list = new ArrayList<>();
+        Gson gson = new Gson();
+        String data = HttpUtil.get("https://hangar.papermc.io/api/v1/projects", Map.of("Accept", "application/json"),
+                Map.of("offset", String.valueOf(0), "limit", String.valueOf(size), "query", keyword));
+        try {
+            JsonArray jsonArray = gson.fromJson(data, JsonObject.class).get("result").getAsJsonArray();
+            for (int i = 0; i < size; i++) {
+                JsonObject jsonObject = jsonArray.get(i).getAsJsonObject();
+                Plugin plugin = HangarPlugin.fromJson(this, jsonObject);
+                list.add(plugin);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
     public Author getAuthor(String name) throws IOException {
         String data = HttpUtil.get("https://hangar.papermc.io/api/v1/users/" + name, Map.of("Accept", "application/json"), Map.of());
         Gson gson = new Gson();

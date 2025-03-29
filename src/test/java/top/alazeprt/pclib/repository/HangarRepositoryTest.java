@@ -21,4 +21,13 @@ public class HangarRepositoryTest {
         System.out.println(plugin.author.image);
     }
 
+    @Test
+    public void search() throws IOException {
+        HangarRepository repository = new HangarRepository();
+        List<Plugin> plugins = repository.search("husk", 10);
+        for (Plugin plugin : plugins) {
+            System.out.println(plugin.name);
+        }
+    }
+
 }

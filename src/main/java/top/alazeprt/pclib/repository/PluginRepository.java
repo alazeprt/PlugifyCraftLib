@@ -9,4 +9,6 @@ public interface PluginRepository {
     List<Plugin> getPlugins(int size, int page) throws IOException;
 
     Plugin getPlugin(int pluginId) throws IOException;
+
+    List<Plugin> search(String keyword, int size) throws IOException;
 }
