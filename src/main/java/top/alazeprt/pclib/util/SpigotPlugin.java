@@ -31,7 +31,7 @@ public class SpigotPlugin extends Plugin {
                 jsonObject.get("releaseDate").getAsLong(),
                 jsonObject.get("updateDate").getAsLong(),
                 jsonObject.getAsJsonObject("rating").get("average").getAsInt(),
-                new String(Base64.getDecoder().decode(jsonObject.get("description").getAsString())),
+                jsonObject.get("description").isJsonNull() ? "" : new String(Base64.getDecoder().decode(jsonObject.get("description").getAsString())),
                 jsonObject.getAsJsonObject("icon").get("data").getAsString());
     }
 }
