@@ -18,7 +18,7 @@ public class HangarRepositoryTest {
     public void getPlugin() throws IOException {
         HangarRepository repository = new HangarRepository();
         Plugin plugin = repository.getPlugin(5);
-        System.out.println(plugin.author.image);
+        System.out.println(plugin.image);
     }
 
     @Test

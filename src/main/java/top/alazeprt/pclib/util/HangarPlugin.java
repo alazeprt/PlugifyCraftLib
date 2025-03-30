@@ -34,4 +34,18 @@ public class HangarPlugin extends Plugin {
                 jsonObject.get("description").getAsString(),
                 HttpUtil.getImageEncoded(jsonObject.get("avatarUrl").getAsString()));
     }
+
+    public static HangarPlugin fastFromJson(HangarRepository repository, JsonObject jsonObject) throws IOException {
+        DateTimeFormatter formatter = DateTimeFormatter.ISO_INSTANT;
+        return new HangarPlugin(repository,
+                jsonObject.get("id").getAsInt(),
+                jsonObject.get("name").getAsString(),
+                repository.getAuthor(jsonObject.getAsJsonObject("namespace").get("owner").getAsString()),
+                jsonObject.getAsJsonObject("stats").get("downloads").getAsInt(),
+                jsonObject.get("category").getAsString(),
+                Date.from(Instant.from(formatter.parse(jsonObject.get("createdAt").getAsString()))),
+                Date.from(Instant.from(formatter.parse(jsonObject.get("lastUpdated").getAsString()))),
+                jsonObject.get("description").getAsString(),
+                "");
+    }
 }

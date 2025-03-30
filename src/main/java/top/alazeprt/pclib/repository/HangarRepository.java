@@ -49,7 +49,7 @@ public class HangarRepository implements PluginRepository {
                 Map.of("offset", String.valueOf(0), "limit", String.valueOf(size), "query", keyword));
         try {
             JsonArray jsonArray = gson.fromJson(data, JsonObject.class).get("result").getAsJsonArray();
-            for (int i = 0; i < size; i++) {
+            for (int i = 0; i < jsonArray.size(); i++) {
                 JsonObject jsonObject = jsonArray.get(i).getAsJsonObject();
                 Plugin plugin = HangarPlugin.fromJson(this, jsonObject);
                 list.add(plugin);
