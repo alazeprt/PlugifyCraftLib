@@ -91,7 +91,7 @@ public class HangarRepository implements PluginRepository {
         String downloadData = HttpUtil.get("https://hangar.papermc.io/api/v1/projects/" + pluginId + "/versions", Map.of("Accept", "application/json"), Map.of(
                 "pagination", gson.toJson(Map.of("offset", 0, "limit", 1))));
         JsonObject jsonObject = gson.fromJson(downloadData, JsonObject.class);
-        Map<String, Integer> versions = new HashMap<>();
+        Map<String, Integer> versions = new LinkedHashMap<>();
         for (JsonElement element : jsonObject.get("result").getAsJsonArray()) {
             versions.put(element.getAsJsonObject().get("name").getAsString(), element.getAsJsonObject().get("id").getAsInt());
         }

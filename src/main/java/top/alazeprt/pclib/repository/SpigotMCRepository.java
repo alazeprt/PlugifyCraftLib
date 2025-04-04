@@ -8,10 +8,7 @@ import top.alazeprt.pclib.util.*;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class SpigotMCRepository implements PluginRepository {
     @Override
@@ -138,7 +135,7 @@ public class SpigotMCRepository implements PluginRepository {
         Gson gson = new Gson();
         JsonArray jsonArray = gson.fromJson(data, JsonArray.class);
         jsonArray = JsonUtil.sortByReleaseDate(jsonArray);
-        Map<String, Integer> versions = new HashMap<>();
+        Map<String, Integer> versions = new LinkedHashMap<>();
         for (JsonElement jsonElement : jsonArray) {
             JsonObject jsonObject = jsonElement.getAsJsonObject();
             versions.put(jsonObject.get("name").getAsString(), jsonObject.get("id").getAsInt());
