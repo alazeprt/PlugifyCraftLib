@@ -13,6 +13,7 @@ import org.apache.hc.core5.http.HttpStatus;
 import java.io.*;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -53,6 +54,12 @@ public class MultiThreadDownloader {
                     downloadMultiThread(httpClient, effectiveUrl, outputFile, fileSize, threadCount);
                 } else {
                     downloadSingleThread(httpClient, effectiveUrl, outputFile);
+                }
+
+                String jarName = FileAnalyzer.getNameByJar(outputFile.getAbsolutePath());
+
+                if (!jarName.isBlank()) {
+                    Files.move(outputFile.toPath(), outputFile.toPath().resolve("..").resolve(jarName));
                 }
 
                 return outputFile;
