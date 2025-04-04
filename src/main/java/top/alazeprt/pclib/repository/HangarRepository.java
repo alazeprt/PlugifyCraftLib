@@ -99,14 +99,14 @@ public class HangarRepository implements PluginRepository {
     }
 
     @Override
-    public void download(int pluginId, int versionId, int threadCount, File path) throws IOException {
+    public File download(int pluginId, int versionId, int threadCount, File path) throws IOException {
         Gson gson = new Gson();
         String downloadData = HttpUtil.get("https://hangar.papermc.io/api/v1/projects/" + pluginId + "/versions/" + versionId, Map.of("Accept", "application/json"), Map.of());
         JsonObject downloadJsonObject = gson.fromJson(downloadData, JsonObject.class);
         for (String key : downloadJsonObject.getAsJsonObject("downloads").keySet()) {
             String url = downloadJsonObject.getAsJsonObject("downloads").getAsJsonObject(key).get("downloadUrl").getAsString();
-            MultiThreadDownloader.download(url, threadCount, path);
-            break;
+            return MultiThreadDownloader.download(url, threadCount, path);
         }
+        return null;
     }
 }

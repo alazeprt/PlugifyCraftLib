@@ -17,5 +17,5 @@ public interface PluginRepository {
 
     Map<String, Integer> getVersions(int pluginId) throws IOException;
 
-    void download(int pluginId, int versionId, int threadCount, File path) throws IOException;
+    File download(int pluginId, int versionId, int threadCount, File path) throws IOException;
 }

@@ -146,8 +146,8 @@ public class SpigotMCRepository implements PluginRepository {
         return versions;
     }
 
-    public void download(int pluginId, int versionId, int threadCount, File path) throws IOException {
+    public File download(int pluginId, int versionId, int threadCount, File path) throws IOException {
         String url = "https://api.spiget.org/v2/resources/" + pluginId + "/versions/" + versionId + "/download/proxy";
-        MultiThreadDownloader.download(url, threadCount, path);
+        return MultiThreadDownloader.download(url, threadCount, path);
     }
 }
