@@ -4,13 +4,12 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import top.alazeprt.pclib.util.Author;
-import top.alazeprt.pclib.util.HttpUtil;
-import top.alazeprt.pclib.util.Plugin;
-import top.alazeprt.pclib.util.SpigotPlugin;
+import top.alazeprt.pclib.util.*;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -131,5 +130,24 @@ public class SpigotMCRepository implements PluginRepository {
             e.printStackTrace();
         }
         return null;
+    }
+
+    @Override
+    public Map<String, Integer> getVersions(int pluginId) throws IOException {
+        String data = HttpUtil.get("https://api.spiget.org/v2/resources/" + pluginId + "/versions", Map.of("Accept", "application/json"), Map.of("size", String.valueOf(10000000)));
+        Gson gson = new Gson();
+        JsonArray jsonArray = gson.fromJson(data, JsonArray.class);
+        jsonArray = JsonUtil.sortByReleaseDate(jsonArray);
+        Map<String, Integer> versions = new HashMap<>();
+        for (JsonElement jsonElement : jsonArray) {
+            JsonObject jsonObject = jsonElement.getAsJsonObject();
+            versions.put(jsonObject.get("name").getAsString(), jsonObject.get("id").getAsInt());
+        }
+        return versions;
+    }
+
+    public void download(int pluginId, int versionId, int threadCount, File path) throws IOException {
+        String url = "https://api.spiget.org/v2/resources/" + pluginId + "/versions/" + versionId + "/download/proxy";
+        MultiThreadDownloader.download(url, threadCount, path);
     }
 }

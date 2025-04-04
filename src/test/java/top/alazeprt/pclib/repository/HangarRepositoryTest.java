@@ -3,6 +3,7 @@ package top.alazeprt.pclib.repository;
 import org.junit.jupiter.api.Test;
 import top.alazeprt.pclib.util.Plugin;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
@@ -28,6 +29,12 @@ public class HangarRepositoryTest {
         for (Plugin plugin : plugins) {
             System.out.println(plugin.name);
         }
+    }
+
+    @Test
+    public void download() throws IOException {
+        HangarRepository repository = new HangarRepository();
+        repository.download(463, repository.getVersions(463).entrySet().stream().findFirst().get().getValue(), 4, new File("./"));
     }
 
 }

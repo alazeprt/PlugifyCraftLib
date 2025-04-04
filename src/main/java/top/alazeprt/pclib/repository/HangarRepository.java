@@ -2,18 +2,14 @@ package top.alazeprt.pclib.repository;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import top.alazeprt.pclib.util.Author;
-import top.alazeprt.pclib.util.HangarPlugin;
-import top.alazeprt.pclib.util.HttpUtil;
-import top.alazeprt.pclib.util.Plugin;
+import top.alazeprt.pclib.util.*;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Base64;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class HangarRepository implements PluginRepository {
     @Override
@@ -87,5 +83,30 @@ public class HangarRepository implements PluginRepository {
             e.printStackTrace();
         }
         return null;
+    }
+
+    @Override
+    public Map<String, Integer> getVersions(int pluginId) throws IOException {
+        Gson gson = new Gson();
+        String downloadData = HttpUtil.get("https://hangar.papermc.io/api/v1/projects/" + pluginId + "/versions", Map.of("Accept", "application/json"), Map.of(
+                "pagination", gson.toJson(Map.of("offset", 0, "limit", 1))));
+        JsonObject jsonObject = gson.fromJson(downloadData, JsonObject.class);
+        Map<String, Integer> versions = new HashMap<>();
+        for (JsonElement element : jsonObject.get("result").getAsJsonArray()) {
+            versions.put(element.getAsJsonObject().get("name").getAsString(), element.getAsJsonObject().get("id").getAsInt());
+        }
+        return versions;
+    }
+
+    @Override
+    public void download(int pluginId, int versionId, int threadCount, File path) throws IOException {
+        Gson gson = new Gson();
+        String downloadData = HttpUtil.get("https://hangar.papermc.io/api/v1/projects/" + pluginId + "/versions/" + versionId, Map.of("Accept", "application/json"), Map.of());
+        JsonObject downloadJsonObject = gson.fromJson(downloadData, JsonObject.class);
+        for (String key : downloadJsonObject.getAsJsonObject("downloads").keySet()) {
+            String url = downloadJsonObject.getAsJsonObject("downloads").getAsJsonObject(key).get("downloadUrl").getAsString();
+            MultiThreadDownloader.download(url, threadCount, path);
+            break;
+        }
     }
 }

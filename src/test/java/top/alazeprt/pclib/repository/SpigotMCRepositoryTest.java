@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 import top.alazeprt.pclib.util.Plugin;
 import top.alazeprt.pclib.util.SpigotPlugin;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.Random;
@@ -32,5 +33,11 @@ public class SpigotMCRepositoryTest {
         for (Plugin plugin : plugins) {
             System.out.println(plugin.name);
         }
+    }
+
+    @Test
+    public void download() throws IOException {
+        SpigotMCRepository repository = new SpigotMCRepository();
+        repository.download(83767, repository.getVersions(83767).entrySet().stream().findFirst().get().getValue(), 4, new File("./"));
     }
 }
