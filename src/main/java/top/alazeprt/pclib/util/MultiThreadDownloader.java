@@ -60,6 +60,7 @@ public class MultiThreadDownloader {
 
                 if (!jarName.isBlank()) {
                     Files.move(outputFile.toPath(), outputFile.toPath().resolve("..").resolve(jarName));
+                    return new File(path, jarName);
                 }
 
                 return outputFile;

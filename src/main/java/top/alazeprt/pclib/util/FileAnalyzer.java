@@ -41,7 +41,7 @@ public class FileAnalyzer {
 
             if (map != null && !map.isEmpty() && map.containsKey("name")) {
                 if (map.containsKey("version")) {
-                    return map.get("name") + "-" + platform + map.get("version") + ".jar";
+                    return map.get("name") + "-" + platform + "-" + map.get("version") + ".jar";
                 } else {
                     return map.get("name") + "-" + platform + ".jar";
                 }
