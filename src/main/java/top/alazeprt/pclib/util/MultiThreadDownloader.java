@@ -15,6 +15,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.*;
 
 public class MultiThreadDownloader {
@@ -39,7 +40,7 @@ public class MultiThreadDownloader {
                 verifyResponseStatus(headResponse);
 
                 String fileName = extractFileName(effectiveUrl);
-                if (fileName == null || fileName.isBlank() || !fileName.contains(".")) {
+                if (fileName.isBlank() || !fileName.contains(".") || !Objects.equals(fileName.split(".")[fileName.split(".").length - 1], "jar")) {
                     fileName = "plugin (downloaded by plugify craft).jar";
                 }
                 File outputFile = new File(path, fileName);
