@@ -46,13 +46,8 @@ public class MultiThreadDownloader {
 
                 // 决策逻辑：同时需要支持分块下载和已知文件大小
                 if (supportsMultiThread && fileSize != null) {
-                    System.out.println("启用多线程下载");
                     downloadMultiThread(httpClient, effectiveUrl, outputFile, fileSize, threadCount);
                 } else {
-                    String reason = "";
-                    if (!supportsMultiThread) reason += "服务器不支持多线程下载";
-                    if (fileSize == null) reason += " 无法获取文件大小";
-                    System.out.println("启用单线程下载，原因：" + reason.trim());
                     downloadSingleThread(httpClient, effectiveUrl, outputFile);
                 }
             }
