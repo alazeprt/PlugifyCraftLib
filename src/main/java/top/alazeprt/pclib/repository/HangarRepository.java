@@ -10,6 +10,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
+import java.util.function.Consumer;
 
 public class HangarRepository implements PluginRepository {
     @Override
@@ -106,6 +107,18 @@ public class HangarRepository implements PluginRepository {
         for (String key : downloadJsonObject.getAsJsonObject("downloads").keySet()) {
             String url = downloadJsonObject.getAsJsonObject("downloads").getAsJsonObject(key).get("downloadUrl").getAsString();
             return MultiThreadDownloader.download(url, threadCount, path);
+        }
+        return null;
+    }
+
+    @Override
+    public File download(int pluginId, int versionId, int threadCount, File path, Consumer<Long> consumer) throws IOException {
+        Gson gson = new Gson();
+        String downloadData = HttpUtil.get("https://hangar.papermc.io/api/v1/projects/" + pluginId + "/versions/" + versionId, Map.of("Accept", "application/json"), Map.of());
+        JsonObject downloadJsonObject = gson.fromJson(downloadData, JsonObject.class);
+        for (String key : downloadJsonObject.getAsJsonObject("downloads").keySet()) {
+            String url = downloadJsonObject.getAsJsonObject("downloads").getAsJsonObject(key).get("downloadUrl").getAsString();
+            return MultiThreadDownloader.download(url, threadCount, path, consumer);
         }
         return null;
     }

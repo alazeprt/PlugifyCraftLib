@@ -6,8 +6,11 @@ import top.alazeprt.pclib.util.SpigotPlugin;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
+import java.util.function.Consumer;
 
 public class SpigotMCRepositoryTest {
     @Test
@@ -36,8 +39,17 @@ public class SpigotMCRepositoryTest {
     }
 
     @Test
+    public void getVersions() throws IOException {
+        SpigotMCRepository repository = new SpigotMCRepository();
+        Map<String, Integer> versions = repository.getVersions(83767);
+        for (Map.Entry<String, Integer> entry : versions.entrySet()) {
+            System.out.println(entry.getKey() + ":" + entry.getValue());
+        }
+    }
+
+    @Test
     public void download() throws IOException {
         SpigotMCRepository repository = new SpigotMCRepository();
-        repository.download(83767, 581034, 4, new File("./"));
+        repository.download(83767, 581034, 4, new File("./"), System.out::println);
     }
 }

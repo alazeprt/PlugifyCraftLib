@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 
 public interface PluginRepository {
     List<Plugin> getPlugins(int size, int page) throws IOException;
@@ -18,4 +19,6 @@ public interface PluginRepository {
     Map<String, Integer> getVersions(int pluginId) throws IOException;
 
     File download(int pluginId, int versionId, int threadCount, File path) throws IOException;
+
+    File download(int pluginId, int versionId, int threadCount, File path, Consumer<Long> consumer) throws IOException;
 }

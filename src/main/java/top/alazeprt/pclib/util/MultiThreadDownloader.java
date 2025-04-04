@@ -2,7 +2,6 @@ package top.alazeprt.pclib.util;
 
 
 import org.apache.hc.client5.http.classic.methods.HttpGet;
-import org.apache.hc.client5.http.classic.methods.HttpHead;
 import org.apache.hc.client5.http.config.RequestConfig;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
@@ -16,8 +15,8 @@ import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.concurrent.*;
+import java.util.function.Consumer;
 
 public class MultiThreadDownloader {
     // 最大重定向次数
@@ -48,6 +47,52 @@ public class MultiThreadDownloader {
 
                 boolean supportsMultiThread = supportMultiThread(headResponse);
                 Long fileSize = tryGetFileSize(headResponse);
+
+                // 决策逻辑：同时需要支持分块下载和已知文件大小
+                if (supportsMultiThread && fileSize != null) {
+                    downloadMultiThread(httpClient, effectiveUrl, outputFile, fileSize, threadCount);
+                } else {
+                    downloadSingleThread(httpClient, effectiveUrl, outputFile);
+                }
+
+                String jarName = FileAnalyzer.getNameByJar(outputFile.getAbsolutePath());
+
+                if (!jarName.isBlank()) {
+                    Files.move(outputFile.toPath(), outputFile.toPath().resolve("..").resolve(jarName));
+                    return new File(path, jarName);
+                }
+
+                return outputFile;
+            }
+        }
+    }
+
+    public static File download(String url, int threadCount, File path, Consumer<Long> consumer) throws IOException {
+        RequestConfig config = RequestConfig.custom()
+                .setRedirectsEnabled(false)
+                .build();
+
+        try (CloseableHttpClient httpClient = HttpClients.custom()
+                .setDefaultRequestConfig(config)
+                .setUserAgent(USER_AGENT)
+                .build()) {
+
+            RedirectResult redirectResult = resolveRedirects(httpClient, url);
+            String effectiveUrl = redirectResult.effectiveUrl;
+
+            try (CloseableHttpResponse headResponse = redirectResult.response) {
+                verifyResponseStatus(headResponse);
+
+                String fileName = extractFileName(effectiveUrl);
+                if (fileName.endsWith(".jar")) {
+                    fileName = "plugin (downloaded by plugify craft).jar";
+                }
+                File outputFile = new File(path, fileName);
+
+                boolean supportsMultiThread = supportMultiThread(headResponse);
+                Long fileSize = tryGetFileSize(headResponse);
+
+                consumer.accept(fileSize == null ? -1 : fileSize);
 
                 // 决策逻辑：同时需要支持分块下载和已知文件大小
                 if (supportsMultiThread && fileSize != null) {

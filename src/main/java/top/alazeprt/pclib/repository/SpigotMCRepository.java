@@ -9,6 +9,7 @@ import top.alazeprt.pclib.util.*;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
+import java.util.function.Consumer;
 
 public class SpigotMCRepository implements PluginRepository {
     @Override
@@ -143,8 +144,15 @@ public class SpigotMCRepository implements PluginRepository {
         return versions;
     }
 
+    @Override
     public File download(int pluginId, int versionId, int threadCount, File path) throws IOException {
         String url = "https://api.spiget.org/v2/resources/" + pluginId + "/versions/" + versionId + "/download/proxy";
         return MultiThreadDownloader.download(url, threadCount, path);
+    }
+
+    @Override
+    public File download(int pluginId, int versionId, int threadCount, File path, Consumer<Long> consumer) throws IOException {
+        String url = "https://api.spiget.org/v2/resources/" + pluginId + "/versions/" + versionId + "/download/proxy";
+        return MultiThreadDownloader.download(url, threadCount, path, consumer);
     }
 }
