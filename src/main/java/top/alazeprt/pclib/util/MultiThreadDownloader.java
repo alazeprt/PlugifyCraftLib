@@ -40,7 +40,7 @@ public class MultiThreadDownloader {
                 verifyResponseStatus(headResponse);
 
                 String fileName = extractFileName(effectiveUrl);
-                if (fileName.isBlank() || !fileName.contains(".") || !Objects.equals(fileName.split(".")[fileName.split(".").length - 1], "jar")) {
+                if (fileName.endsWith(".jar")) {
                     fileName = "plugin (downloaded by plugify craft).jar";
                 }
                 File outputFile = new File(path, fileName);

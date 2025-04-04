@@ -4,7 +4,7 @@ plugins {
 }
 
 group = "top.alazeprt.pclib"
-version = "1.12"
+version = "1.13"
 
 repositories {
     mavenCentral()
