@@ -38,6 +38,6 @@ public class SpigotMCRepositoryTest {
     @Test
     public void download() throws IOException {
         SpigotMCRepository repository = new SpigotMCRepository();
-        repository.download(83767, repository.getVersions(83767).entrySet().stream().findFirst().get().getValue(), 4, new File("./"));
+        repository.download(83767, 581034, 4, new File("./"));
     }
 }

@@ -39,6 +39,9 @@ public class MultiThreadDownloader {
                 verifyResponseStatus(headResponse);
 
                 String fileName = extractFileName(effectiveUrl);
+                if (fileName == null || fileName.isBlank() || !fileName.contains(".")) {
+                    fileName = "plugin (downloaded by plugify craft).jar";
+                }
                 File outputFile = new File(path, fileName);
 
                 boolean supportsMultiThread = supportMultiThread(headResponse);
