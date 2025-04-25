@@ -22,6 +22,7 @@ public class MultiThreadDownloader {
     // 最大重定向次数
     private static final int MAX_REDIRECTS = 5;
     private static final String USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36";
+    public static final List<CloseableHttpClient> httpClients = new ArrayList<>();
 
     public static File download(String url, int threadCount, File path) throws IOException {
         RequestConfig config = RequestConfig.custom()

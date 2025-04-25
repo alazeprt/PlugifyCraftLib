@@ -34,7 +34,7 @@ public class HttpUtil {
                     throw new IOException("Empty response body");
                 } else {
                     EntityUtils.consume(entity);
-                    throw new IOException("HTTP error: " + statusCode);
+                    throw new IOException("HTTP Drror: " + statusCode);
                 }
             });
         }

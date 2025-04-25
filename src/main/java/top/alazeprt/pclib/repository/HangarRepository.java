@@ -33,6 +33,25 @@ public class HangarRepository implements PluginRepository {
         return list;
     }
 
+    public List<Plugin> fastGetPlugins(int size, int page) throws IOException {
+        List<Plugin> list = new ArrayList<>();
+        Gson gson = new Gson();
+        String data = HttpUtil.get("https://hangar.papermc.io/api/v1/projects", Map.of("Accept", "application/json"), Map.of(
+                "pagination", gson.toJson(Map.of("offset", (page-1)*size, "limit", size))
+        ));
+        try {
+            JsonArray jsonArray = gson.fromJson(data, JsonObject.class).get("result").getAsJsonArray();
+            for (int i = 0; i < size; i++) {
+                JsonObject jsonObject = jsonArray.get(i).getAsJsonObject();
+                Plugin plugin = HangarPlugin.fastFromJson(this, jsonObject);
+                list.add(plugin);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
     @Override
     public Plugin getPlugin(int pluginId) throws IOException {
         return getHangarPlugin(pluginId);
@@ -49,6 +68,24 @@ public class HangarRepository implements PluginRepository {
             for (int i = 0; i < jsonArray.size(); i++) {
                 JsonObject jsonObject = jsonArray.get(i).getAsJsonObject();
                 Plugin plugin = HangarPlugin.fromJson(this, jsonObject);
+                list.add(plugin);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+    public List<Plugin> fastSearch(String keyword, int size) throws IOException {
+        List<Plugin> list = new ArrayList<>();
+        Gson gson = new Gson();
+        String data = HttpUtil.get("https://hangar.papermc.io/api/v1/projects", Map.of("Accept", "application/json"),
+                Map.of("offset", String.valueOf(0), "limit", String.valueOf(size), "query", keyword));
+        try {
+            JsonArray jsonArray = gson.fromJson(data, JsonObject.class).get("result").getAsJsonArray();
+            for (int i = 0; i < jsonArray.size(); i++) {
+                JsonObject jsonObject = jsonArray.get(i).getAsJsonObject();
+                Plugin plugin = HangarPlugin.fastFromJson(this, jsonObject);
                 list.add(plugin);
             }
         } catch (Exception e) {
